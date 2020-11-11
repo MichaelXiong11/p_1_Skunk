@@ -1,20 +1,16 @@
 package skunk.domain;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import org.junit.jupiter.api.Test;
-
-class PredictableDie {
-
+public class PredictableDie {
+	
 	private int[] theRolls;
 	private int nextInt;
 	private int lastRoll;
 	
-	public PredictableDie(){
-		
-	}
-
 	public PredictableDie(int[] is) {
+		
+		if (is.length ==0)
+			throw new RuntimeException();
+		
 		this.theRolls = is;
 		this.nextInt = 0;
 	}
@@ -29,8 +25,8 @@ class PredictableDie {
 		
 	}
 
-	public int getLastRoll() {
-		// TODO Auto-generated method stub
+	public Integer getLastRoll() {
+		
 		return this.lastRoll;
 	}
 
