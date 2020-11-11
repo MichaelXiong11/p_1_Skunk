@@ -49,26 +49,27 @@ public class UserInterface{
                     case 0: //No skunks rolled
                         break;
                     case 1: //Rolled exactly 1 skunk
-                        StdOut.println("SKUNK: Turn Over | 1 Penalty Point");
+                        StdOut.println("Single SKUNK: Player 1's turn is over | 1 chip lost");
                         keepAsking = false;
                         break;
                     case 2: //Rolled 1 skunk and a deuce
-                        StdOut.println("SKUNK: Turn Over | 2 Penalty Point");
+                        StdOut.println("Duece SKUNK: Player 1's turn is over | 2 chips lost");
                         keepAsking = false;
                         break;
                     case 3: //Rolled 2 skunks
-                        StdOut.println("SKUNK: Turn Over | Lose all points");
+                        StdOut.println("Double SKUNK: Player 1's turn is over | 4 chips lost");
                         keepAsking = false;
                         break;
                 }
             }
             else if(choice == 2) //User chose to stop rolling
             {
-                StdOut.println("Turn Done");
+            	StdOut.println("Player 1 ends turn");
+            	
                 
                 //Called doneRolling() method; Told controller to stop rolling
                 controller.doneRolling();
-                StdOut.println("Total Score: " + controller.getPlayerScore());
+                StdOut.println("Turn Score: " + controller.getPlayerScore() + " | 50 Kitty Chips Left");
                 keepAsking = false;
             }
         }while(keepAsking);
@@ -95,7 +96,7 @@ public class UserInterface{
         
         do{
         	//Ask user for the number of players
-            StdOut.print("Number of players: ");
+            StdOut.print("Enter the number of players: ");
             input = StdIn.readLine();
             
             //Check for invalid inputs such as letters, symbols, and negative numbers
