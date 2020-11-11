@@ -1,30 +1,42 @@
 package skunk.domain;
 
-public class Die
-{
-	private int lastRoll;
+public class Die{
+    private final int MAX = 6;
+    private int value;
 
-	public Die()
-	{
-		this.roll();
-	}
-
-	public int getLastRoll() // getter or accessor method
-	{
-
-		return this.lastRoll;
-	}
-
-	public void roll() // note how this changes Die's state, but doesn't return
-						// anything
-	{
-		this.lastRoll = (int) (Math.random() * 6 + 1);
-	}
-
-	@Override
-	public String toString() // this OVERRIDES the default Object.toString()
-	{
-		return "Die: " + this.getLastRoll();
-	}
-
+    /**
+     * Default Constructor
+     */
+    public Die(){
+        this.roll();
+    }
+    
+    /**
+     * Parameterized constructor (Overloading
+     */
+    public Die(int v){
+        value = v;
+    }
+    
+    //Getter (Accessor) methods
+    public int getValue(){
+    	return value;
+    }
+    
+    //Setter (Mutator) methods
+    public void setValue(int v){
+    	value = v;
+    }
+    
+    /**
+     * Rolling a  die
+     * @return int The value of the die roll
+     */
+    public void roll(){
+        value = (int)(Math.random() * MAX) + 1;
+    }
+    
+    public String toString(){
+        return "Die: " + value;
+    }
 }
