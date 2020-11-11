@@ -8,8 +8,12 @@ public class Scratch
 	{
 		// TODO Auto-generated method stub
 
-		StdOut.print("hello");
-
+		StdOut.println("Welcome to the Skunk Game");
+		
+		Die Dice1 = new Die();
+		
+		StdOut.println( Dice1);
+		
 	}
 
 }
