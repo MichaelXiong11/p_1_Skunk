@@ -1,41 +1,55 @@
 package skunk.domain;
 
 public class Turn{
-    //Total points a player has scored in one turn
-    private int turnScoreTotal;
+    //The total score a player has rolled in one turn
+    private int turnScore;
     
-    //Points a player has scored on one dice roll (sum of two dice) 
+    //The dice total of a roll
     private int rollScore;
-
+    
     /**
-     * Constructor for objects of class Turn
+     * Default constructor for objects of class Turn
      */
     public Turn(){
-        turnScoreTotal = 0;
-        rollScore = 0;
+        this.turnScore = 0;
+        this.rollScore = 0;
+    }
+    
+    public Turn(int turnScore){
+        this.turnScore = turnScore;
     }
     
     //Getter (Accessor) methods
-    public int getCurrentTurnScoreTotal(){
-    	return turnScoreTotal;
+    public int getTurnScore(){
+    	return turnScore;
     }
-    public int getCurrentRollScore(){
+    public int getRollScore(){
     	return rollScore;
     }
     
-    //Setter (Mutator) methods
-    public void setCurrentTurnScoreTotal(int turnScoreTotal){
-    	this.turnScoreTotal = turnScoreTotal;
+    
+    //Accessor (Mutator) methods
+    public void setTurnScore(int turnScore){
+    	this.turnScore = turnScore;
     }
-    public void setCurrentRollScore(int rollScore){
+    public void setRollScore(int rollScore){
     	this.rollScore = rollScore;
-    	}
-    
-    public void addToTurnScoreTotal(int i){
-        turnScoreTotal += i;
     }
     
-    public void removeFromTurnScoreTotal(int i){
-        turnScoreTotal -= i;
+    /**
+     * Method that increases the turnScore
+     * @param int Amount to increase turnScore by
+     */
+    public void increaseTurnScore(int t){
+        turnScore += t;
+    }
+    
+    /**
+     * toString method
+     */
+    public String toString(){
+        String s = "TurnScore: " + turnScore;
+        
+        return s;
     }
 }

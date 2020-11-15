@@ -16,33 +16,27 @@ public class Dice{
     private Die die1;
     private Die die2;
     
-    //Total sum of two dice
-    private int diceTotal;
+    //The sum of the two dice values
+    private int diceSum;
     /**
      * Constructor for objects of class Dice
      */
     public Dice(){
-        this.die1 = new Die();
-        this.die2 = new Die();
+        die1 = new Die();
+        die2 = new Die();
+        
+        diceSum = die1.getValue() + die2.getValue();
     }
     
-    /**
-     * Parameterized Constructor (Overloading)
-     */
-    public Dice(Die die1, Die die2){
-        this.die1 = die1;
-        this.die2 = die2;
-    }
-    
-    //Getter (Accesser) methods
+    //Getter (Accessor) methods
     public Die getDie1(){
     	return die1;
     }
     public Die getDie2(){
     	return die2;
     }
-    public int getDiceTotal(){
-    	return diceTotal;
+    public int getDiceSum(){
+    	return diceSum;
     }
     
     //Setter (Mutator) methods
@@ -52,21 +46,22 @@ public class Dice{
     public void setDie2(Die die2){
     	this.die2 = die2;
     }
-    public void setDiceTotal(int diceTotal){
-    	this.diceTotal = diceTotal;
-    }
-        
+    
     /**
-     * Method that rolls two dice
+     * Method that rolls both die
      */
     public void roll(){
         die1.roll();
         die2.roll();
-        diceTotal = die1.getValue() + die2.getValue();
+        
+        diceSum = die1.getValue() + die2.getValue();
     }
     
+    /**
+     * toString method
+     */
     public String toString(){
-        String s = "Die 1: " + die1.getValue() + " | Die 2: " + die2.getValue();
+        String s = "{DieOne: " + die1.getValue() + "  DieTwo: " + die2.getValue() + "}";
         
         return s;
     }

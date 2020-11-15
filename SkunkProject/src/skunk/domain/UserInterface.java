@@ -6,147 +6,195 @@ import edu.princeton.cs.introcs.StdOut;
 
 public class UserInterface{
     private static Controller controller;
-
+    private static final int ROLL = 1;
+    private static final int DONEROLLING = 2;
+    private static final int QUIT = 3;
+    
+    //Stores a player's turn history
+    private static ArrayList<String> turnHistory = new ArrayList<String>();
+    
     public static void main(String args[]){
         controller = new Controller();
+        titleText();
         
-        //Calls title() method; Text display of name of game
-        title();
+        //Set game for 1 player  
+        controller.addPlayer("Player 1");
         
-        //Calls playerSizePrompt() method; Asks user for how many players
-        int numPlayers = playerSizePrompt();
+        //Start the game
+        controller.start();
         
-        //Tells controller to set number of players
-        controller.setNumPlayers(numPlayers);
+        //To check if the game is over
+        boolean isGameOver = controller.isGameOver();
         
-        //To store the users choice
-        int choice;
-        
-        //Flag for user's choice prompt;
-        //true-keeps asking user to make a choice
-        //false-stops asking user to make a choice
-        boolean keepAsking = true;
-        
-        do{
-            //Calls playerChoice() method; Asks user to make a choice
-            choice = playerChoice();
+        //Call playState() method; The playState for a player
+        playState();
             
-            //Evaluates the player's choice; 1-Roll Dice 2-Stop Rolling Dice
-            if(choice == 1) //User chose to roll dice
-            {
-                //Asks controller to roll dice
-                controller.roll();
-                
-                //Display the dice values
-                StdOut.println(controller.dieResults());
-                StdOut.println("-----------------------");
-                
-                //Ask for skunkValue
-                int skunkValue = controller.getSkunkValue();
-                
-                //Evaluate skunkValue
-                switch(skunkValue){
-                    case 0: //No skunks rolled
-                        break;
-                    case 1: //Rolled exactly 1 skunk
-                        StdOut.println("Single SKUNK: Player 1's turn is over | 1 chip lost");
-                        keepAsking = false;
-                        break;
-                    case 2: //Rolled 1 skunk and a deuce
-                        StdOut.println("Duece SKUNK: Player 1's turn is over | 2 chips lost");
-                        keepAsking = false;
-                        break;
-                    case 3: //Rolled 2 skunks
-                        StdOut.println("Double SKUNK: Player 1's turn is over | 4 chips lost");
-                        keepAsking = false;
-                        break;
-                }
-            }
-            else if(choice == 2) //User chose to stop rolling
-            {
-            	StdOut.println("Player 1 ends turn");
-            	
-                
-                //Called doneRolling() method; Told controller to stop rolling
-                controller.doneRolling();
-                StdOut.println("Turn Score: " + controller.getPlayerScore() + " | 50 Kitty Chips Left");
-                keepAsking = false;
-            }
-        }while(keepAsking);
-    }
-    
-    /**
-     * Displays Title of Game
-     */
-    private static void title(){
-        StdOut.println("SKUNK GAME");
-        StdOut.println("=================================");
-    }
-    
-    /**
-     * Method that asks user how many players are there for the game
-     * @return int The number of players for the game
-     */
-    private static int playerSizePrompt(){
-    	//Stores user's input
-        String input;
-        int numPlayers = 0;
-        
-        boolean flag = true;
-        
-        do{
-        	//Ask user for the number of players
-            StdOut.print("Enter the number of players: ");
-            input = StdIn.readLine();
+        //Go to the next player
+        controller.nextPlayer();
             
-            //Check for invalid inputs such as letters, symbols, and negative numbers
-            try{
-                numPlayers = Integer.parseInt(input);
-                if(numPlayers <= 0){
-                    StdOut.println("INVALID INPUT");
-                }
-                else{
-                    flag = false;
-                }
-            }catch(NumberFormatException e){
-                StdOut.println("INVALID INPUT");
-            }
-        }while(flag);
+        //Check if the game is over (Winner was decided)
+         isGameOver = controller.isGameOver();
+       
         
-        
-        StdOut.println();
-        return numPlayers;
+        //If game is over, display winner
+        if(isGameOver == true){
+            StdOut.println(" --GAME OVER");
+            
+            //Get Winner
+            String winner = controller.getWinner();
+            StdOut.println(" --WINNER: " + winner);
+        }      
     }
     
     /**
-     * Method that asks user to make a choice
-     * 1-Roll Dice | 2-Stop rolling dice
-     * @return int The choice that the player made
+     * Method that displays the game title
      */
-    private static int playerChoice(){
+    private static void titleText(){
+        StdOut.println("Welcome to the SKUNK GAME");
+        StdOut.println("==============================");
+    }
+    
+    /**
+     * Method that asks the user to make choice for the game
+     * 1-Roll Dice 2-Stop Rolling 3-Help 4-Quit
+     * @return int Returns the choice the player made
+     */
+    private static int makeChoice(){
         String input;
-        boolean flag = true;
         int choice = 0;
+        boolean keepAsking = false;
+        String currentPlayer = controller.getCurrentPlayerName();
         
+        //Ask a player to make a choice
         do{
-        	//Ask users for their choice
-            StdOut.println("Player " + (controller.getCurrentPlayer() + 1) + ": 1-Roll Dice | 2-Stop Rolling ");
+            StdOut.println(currentPlayer + ": 1-Roll Dice | 2-Stop Rolling | 3-Quit App");
             input = StdIn.readLine();
             
-            //Check for invalid inputs such as letters, symbols, and negative numbers
+            //Check for invalid inputs
             try{
                 choice = Integer.parseInt(input);
-                if(choice <= 0 || choice > 2){
+                
+                //Out of range check
+                if(choice <= 0 || choice > QUIT){
                     StdOut.println("INVALID INPUT");
                 }
                 else{
-                    flag = false;
+                    keepAsking = false;
                 }
-            }catch(NumberFormatException e){
+            }catch(NumberFormatException e){ 
                 StdOut.println("INVALID INPUT");
             }
-        }while(flag);
+        }while(keepAsking);
         
         return choice;
+    }
+    
+    /**
+     * Method that handles the display while a player is playing the game
+     */
+    private static void playState(){
+        boolean keepPlaying = true;
+        int choice;
+        String currentPlayer = controller.getCurrentPlayerName();
+        while(keepPlaying == true){
+            choice = makeChoice();
+            
+            if(choice == ROLL) {
+                //Roll the dice
+                controller.roll();
+                
+                //Get the dice values from the roll
+                String diceValues = controller.getDiceValues();
+                
+                //Get the turn score
+                int turnScore = controller.getTurnScore();
+                
+                //Display the player's dice roll results
+                StdOut.println("  " + currentPlayer + " | " + diceValues + " | TurnScore: " + turnScore);
+                
+                //Store the results into turn history
+                turnHistory.add("  Roll " + (turnHistory.size() + 1) + " | " + diceValues + " | TurnScore: " + turnScore);
+                
+                //Check if a skunk was rolled
+                int skunkValue = controller.getSkunkValue();
+                
+                // prints message if skunk was rolled
+                skunkMessage(skunkValue);
+                if(skunkValue != 0){
+                    StdOut.println(" -------------------TURN IS OVER---------------------------");
+                    
+                    //Display results for the turn
+                    turnResultsMessage();
+                    keepPlaying = false;
+                }
+                StdOut.println("---------------------------------------------------------------------");
+            }
+            else if(choice == DONEROLLING) {
+                controller.doneRolling();
+                
+                //Display results for the turn
+                turnResultsMessage();
+                StdOut.println("---------------------------------------------------------------------");
+                keepPlaying = false;
+            }
+            else if(choice == QUIT){
+                //Terminates Program
+                System.exit(0);
+            }
+        }
+    }
+    
+    
+    /**
+     * Method that displays a message if a skunk was rolled
+     * @param int
+     */
+    private static void skunkMessage(int skunkValue){
+        switch(skunkValue){
+            case 1:
+                StdOut.println(" --Rolled a Single Skunk | 1 Penalty Chip | Lose Turn Score");
+                break;
+            case 2:
+                StdOut.println(" --Rolled a Duece Skunk | 2 Penalty Chips | Lose Turn Score");
+                break;
+            case 3:
+                StdOut.println(" --Rolled a Double Skunk | 4 Penalty Chips | Lose ENTIRE Score");
+                break;
+        }
+    }
+    
+    /**
+     * Method that displays the turn result for a player
+     */
+    private static void turnResultsMessage(){
+        //Print the results of the player's turn
+        
+        
+        String currentPlayer = controller.getCurrentPlayerName();
+        int playerScore = controller.getCurrentPlayerScore();
+        int kittyScore = controller.getCurrentPlayerKittyScore();
+        
+        turnHistory.add("   Total Score: " + playerScore + " | Kitty Chips Lost: " + (kittyScore - 50));
+        turnHistory.add("========================END=========================");
+        
+        StdOut.println("====================TURN SUMMARY====================");
+        StdOut.println("KEEP PRESSING ENTER");
+        StdOut.print("Player: " + currentPlayer);
+        int index = 0;
+        String input;
+        while(true){
+            input = StdIn.readLine();
+            
+            if(input.equals("")){
+                StdOut.print(turnHistory.get(index));
+                ++index;
+            }
+            
+            if(index == turnHistory.size()){
+                turnHistory.clear();
+                break;
+            }
+        }
+        StdOut.println();
     }
 }

@@ -1,42 +1,41 @@
 package skunk.domain;
 
 public class Die{
-    private final int MAX = 6;
+    //The current face value of the die
     private int value;
-
+    
+    //Lowest and highest values on the die
+    private final int MIN = 1;
+    private final int MAX = 6;
+    
     /**
-     * Default Constructor
+     * Default Constructor for objects of class Die
      */
     public Die(){
-        this.roll();
+       roll();
     }
     
-    /**
-     * Parameterized constructor (Overloading
-     */
-    public Die(int v){
-        value = v;
+    public Die(int value){
+        if(value > MAX || value < MIN){
+            roll();
+        }
+        else{
+            this.value = value;
+        }
     }
     
-    //Getter (Accessor) methods
     public int getValue(){
     	return value;
     }
     
-    //Setter (Mutator) methods
-    public void setValue(int v){
-    	value = v;
+    public void setValue(int value){
+    	this.value = value;
     }
     
     /**
-     * Rolling a  die
-     * @return int The value of the die roll
+     * Method that rolls a die; possibly changing it's value
      */
     public void roll(){
-        value = (int)(Math.random() * MAX) + 1;
-    }
-    
-    public String toString(){
-        return "Die: " + value;
+        value = (int)(Math.random() * MAX) + MIN;
     }
 }
