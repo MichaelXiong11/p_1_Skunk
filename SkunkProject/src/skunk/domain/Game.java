@@ -38,6 +38,9 @@ public class Game{
     
     //The score for the players to reach
     private final int SCOREGOAL = 100;
+    
+    private int kittyPenaltyChip;
+    
     /**
      * Default constructor for objects of class Game
      */
@@ -54,6 +57,8 @@ public class Game{
        finalTurn = false;
        gameOver = false;
        winner = null;
+       
+       kittyPenaltyChip = 0;
     }
     
     //Getter (Accessor) methods
@@ -131,20 +136,23 @@ public class Game{
         //Check if skunks were rolled
         if (roll.isSkunk1() == true) { //Rolling exactly 1 skunk
             turn.setTurnScore(0);
-            player.get(currentPlayerIndex).increaseKittyScore(1);
+            player.get(currentPlayerIndex).decreaseKittyScore(1);
+            kittyPenaltyChip++;
             return 1;
         }
         else if(roll.isSkunk2() == true) {
         
             turn.setTurnScore(0);
-            player.get(currentPlayerIndex).increaseKittyScore(2);
+            player.get(currentPlayerIndex).decreaseKittyScore(2);
+            kittyPenaltyChip += 2;
             return 2;
         }
         else if(roll.isSkunk3() == true) {
         
             turn.setTurnScore(0);
-            player.get(currentPlayerIndex).increaseKittyScore(4);
-            //player.get(currentPlayerIndex).setScore(0);
+            player.get(currentPlayerIndex).decreaseKittyScore(4);
+            player.get(currentPlayerIndex).setScore(0);
+            kittyPenaltyChip += 4;
             return 3;
         }
         
@@ -238,13 +246,15 @@ public class Game{
             if(winner.equals(tempPlayer) == false){
                 if(tempPlayer.getScore() == 0){
                     player.get(i).decreaseKittyScore(10);
-                    winner.increaseKittyScore(10);
+                    kittyPenaltyChip += 10;
                 }
                 else{
                     player.get(i).decreaseKittyScore(5);
-                    winner.increaseKittyScore(5);
+                    kittyPenaltyChip += 5;
                 }
             }
         }
+        
+        winner.increaseKittyScore(kittyPenaltyChip);
     }
 }
